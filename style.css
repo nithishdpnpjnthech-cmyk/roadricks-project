@@ -29,7 +29,7 @@ body{font-family:'Montserrat',sans-serif;background:var(--dark);color:var(--whit
 }
 .logo{font-family:'Playfair Display',serif;font-size:1.35rem;color:var(--white);cursor:pointer;text-decoration:none;letter-spacing:0.01em}
 .nav-links{display:flex;gap:2.8rem;list-style:none}
-.nav-links a{font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;color:#1a1a1a;text-decoration:none;transition:color 0.3s;cursor:pointer}
+.nav-links a{font-size:0.75rem;letter-spacing:0.15em;font-weight:600;text-transform:uppercase;color:#1a1a1a;text-decoration:none;transition:color 0.3s;cursor:pointer}
 .nav-links a:hover,.nav-links a.active{color:var(--gold)}
 .nav-actions{display:flex;align-items:center;gap:0.8rem}
 .nav-admin-btn{
