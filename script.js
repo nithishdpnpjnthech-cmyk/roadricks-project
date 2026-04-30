@@ -98,32 +98,56 @@ function renderHeroSlider() {
   const slider = document.getElementById('heroSlider');
   const dots = document.getElementById('heroDots');
   if(!slider || !dots) return;
+
+  // Stop any running interval before rebuilding DOM
+  clearInterval(data.slideInterval);
+  data.slideInterval = null;
+
   slider.innerHTML=''; dots.innerHTML='';
-  if(!data.heroImages.length) {
+
+  // Filter out any stale/invalid URLs before rendering
+  const validImages = data.heroImages.filter(img => img && img.trim() !== '');
+
+  if(!validImages.length) {
     slider.innerHTML='<div class="hero-slide active" style="background:linear-gradient(135deg,#161616,#252525)"></div>';
-    clearInterval(data.slideInterval);
+    data.currentSlide = 0;
     return;
   }
-  data.heroImages.forEach((img,i)=>{
+
+  // Reset currentSlide if it's out of bounds (e.g. images were removed)
+  if(data.currentSlide >= validImages.length) {
+    data.currentSlide = 0;
+  }
+
+  validImages.forEach((img,i)=>{
     const slide = document.createElement('div');
-    slide.className='hero-slide'+(i===0?' active':'');
-    slide.style.backgroundImage=`url('${img}')`;
+    slide.className = 'hero-slide' + (i === data.currentSlide ? ' active' : '');
+    slide.style.backgroundImage = `url('${img}')`;
     slider.appendChild(slide);
+
     const dot = document.createElement('button');
-    dot.className='hero-dot'+(i===0?' active':'');
-    dot.onclick=()=>goToSlide(i);
+    dot.className = 'hero-dot' + (i === data.currentSlide ? ' active' : '');
+    dot.onclick = ()=>goToSlide(i);
     dots.appendChild(dot);
   });
-  clearInterval(data.slideInterval);
-  data.slideInterval = setInterval(()=>goToSlide((data.currentSlide+1)%data.heroImages.length),5000);
+
+  // Start auto-advance only when there's more than one image
+  if(validImages.length > 1) {
+    data.slideInterval = setInterval(()=>{
+      goToSlide((data.currentSlide + 1) % validImages.length);
+    }, 5000);
+  }
 }
 
 function goToSlide(idx) {
   const slides = document.querySelectorAll('.hero-slide');
-  const dots = document.querySelectorAll('.hero-dot');
-  slides.forEach((s,i)=>s.classList.toggle('active',i===idx));
-  dots.forEach((d,i)=>d.classList.toggle('active',i===idx));
-  data.currentSlide=idx;
+  const dots   = document.querySelectorAll('.hero-dot');
+  if(!slides.length) return;
+  // Clamp index defensively
+  const safeIdx = Math.max(0, Math.min(idx, slides.length - 1));
+  slides.forEach((s,i) => s.classList.toggle('active', i === safeIdx));
+  dots.forEach((d,i)   => d.classList.toggle('active', i === safeIdx));
+  data.currentSlide = safeIdx;
 }
 
 // ===========================
@@ -496,23 +520,34 @@ function renderAdminHeroImages(){
 
 function removeHeroImg(i){
   data.heroImages.splice(i,1);
+  // Keep currentSlide in bounds after removal
+  if(data.currentSlide >= data.heroImages.length) data.currentSlide = Math.max(0, data.heroImages.length - 1);
   renderAdminHeroImages();
   notify('Image removed');
 }
 
 function handleHeroUpload(e){
   const files=Array.from(e.target.files);
-  files.forEach(f=>{
-    if(data.heroImages.length<10){
-      const url=URL.createObjectURL(f);
-      data.heroImages.push(url);
-    }
+  let processed=0;
+  const total=Math.min(files.length, 10-data.heroImages.length);
+  if(total===0){ e.target.value=''; return; }
+  files.slice(0,total).forEach(f=>{
+    const reader=new FileReader();
+    reader.onload=ev=>{
+      data.heroImages.push(ev.target.result); // base64 data: URL — persists across refresh
+      processed++;
+      if(processed===total){
+        renderAdminHeroImages();
+        e.target.value='';
+      }
+    };
+    reader.readAsDataURL(f);
   });
-  renderAdminHeroImages();
-  e.target.value='';
 }
 
 function saveHeroImages(){
+  // Guard: reset slide index if it now exceeds the image count
+  if(data.currentSlide >= data.heroImages.length) data.currentSlide = 0;
   renderHeroSlider();
   saveData();
   notify('Hero images updated!','green');
@@ -859,7 +894,7 @@ function renderAdminMessages(){
     </div>
   `).join('');
   updateMsgBadge();
-  saveData();
+  // Note: saveData() intentionally NOT called here — rendering is read-only
 }
 
 function toggleMessageDetail(id){
@@ -919,8 +954,57 @@ function saveMetrics(){
 }
 
 // ===========================
-// PERSISTENCE (JSON-based storage via localStorage)
+// PERSISTENCE
 // ===========================
+// Hero images are stored SEPARATELY (one localStorage key per image)
+// because base64 image data is large and would exceed the ~5MB quota
+// if bundled with the rest of the data object in a single key.
+// The main 'rodricks_data' key stores everything else (small JSON).
+
+const HERO_KEY_PREFIX = 'rodricks_hero_';
+const HERO_COUNT_KEY  = 'rodricks_hero_count';
+
+function saveHeroImagesToStorage() {
+  try {
+    // Clear old hero image keys first
+    const oldCount = parseInt(localStorage.getItem(HERO_COUNT_KEY) || '0', 10);
+    for(let i = 0; i < oldCount; i++) {
+      localStorage.removeItem(HERO_KEY_PREFIX + i);
+    }
+    // Write each image individually
+    let saved = 0;
+    for(let i = 0; i < data.heroImages.length; i++) {
+      try {
+        localStorage.setItem(HERO_KEY_PREFIX + i, data.heroImages[i]);
+        saved++;
+      } catch(e) {
+        console.warn(`Hero image ${i} too large to store (quota exceeded). Only ${saved} images saved.`);
+        break;
+      }
+    }
+    localStorage.setItem(HERO_COUNT_KEY, String(saved));
+  } catch(e) {
+    console.warn('Could not save hero images:', e);
+  }
+}
+
+function loadHeroImagesFromStorage() {
+  try {
+    const count = parseInt(localStorage.getItem(HERO_COUNT_KEY) || '-1', 10);
+    if(count < 0) return false; // key never set — first visit
+    const images = [];
+    for(let i = 0; i < count; i++) {
+      const img = localStorage.getItem(HERO_KEY_PREFIX + i);
+      if(img) images.push(img);
+    }
+    data.heroImages = images; // replace defaults (even if empty — user cleared all)
+    return true;
+  } catch(e) {
+    console.warn('Could not load hero images:', e);
+    return false;
+  }
+}
+
 function saveData() {
   try {
     localStorage.setItem('rodricks_data', JSON.stringify({
@@ -929,8 +1013,9 @@ function saveData() {
       messages: data.messages,
       users: data.users,
       metrics: data.metrics,
-      heroImages: data.heroImages.filter(img => !img.startsWith('blob:'))
+      // heroImages stored separately — NOT included here
     }));
+    saveHeroImagesToStorage();
   } catch(e) { console.warn('Storage unavailable:', e); }
 }
 
@@ -944,8 +1029,10 @@ function loadData() {
       if(parsed.messages) data.messages = parsed.messages;
       if(parsed.users && parsed.users.length) data.users = parsed.users;
       if(parsed.metrics) data.metrics = parsed.metrics;
-      if(parsed.heroImages && parsed.heroImages.length) data.heroImages = parsed.heroImages;
     }
+    // Load hero images from their own dedicated keys
+    loadHeroImagesFromStorage();
+
     // Migrate: encode any plain-text passwords that aren't already base64
     let migrated=false;
     data.users=data.users.map(u=>{
@@ -958,19 +1045,10 @@ function loadData() {
     if(migrated) saveData();
   } catch(e) { console.warn('Could not load saved data:', e); }
 }
+
 function isBase64(str){
   try{ return btoa(atob(str))===str; }catch(e){ return false; }
 }
-
-// Auto-save on data modifications
-const origSaveProject = saveProject;
-const origDeleteProject = deleteProject;
-const origSaveService = saveService;
-const origDeleteService = deleteService;
-const origSaveMetrics = saveMetrics;
-const origSubmitContact = submitContact;
-const origToggleFeatured = toggleFeatured;
-const origToggleAward = toggleAward;
 
 // ===========================
 // INIT
