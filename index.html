@@ -1,724 +1,81 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RodricksRestorations</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
-</head>
-<body>
-</head>
+/* ===========================
+   SCROLL INDICATOR
+   =========================== */
+#heroSection {
+  position: relative;
+}
 
+.scroll-indicator {
+  position: absolute;
+  bottom: 2.2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  z-index: 10;
+  opacity: 1;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+}
 
-<!-- ========== NAV ========== -->
-<nav id="mainNav">
-  <a class="logo" onclick="showPage('home')">RodricksRestorations</a>
-  <ul class="nav-links">
-    <li><a onclick="showPage('home')" class="active" id="nav-home">HOME</a></li>
-    <li><a onclick="showPage('restore')" id="nav-restore">RESTORATION</a></li>
-    <li><a onclick="showPage('services')" id="nav-services">SERVICES</a></li>
-    <li><a onclick="showPage('about')" id="nav-about">ABOUT US</a></li>
-    <li><a onclick="showPage('contact')" id="nav-contact">CONTACT</a></li>
-  </ul>
-  <div class="nav-actions">
-    <button class="nav-admin-btn" onclick="openAdminLogin()">Admin</button>
-    <button class="nav-toggle" onclick="toggleMobileNav()" aria-label="Toggle navigation" aria-expanded="false">
-      <span></span><span></span><span></span>
-    </button>
-  </div>
-</nav>
+.scroll-indicator.hide {
+  opacity: 0;
+}
 
-<section id="heroSection">
-  <div class="hero-slider" id="heroSlider"></div>
+.scroll-mouse {
+  width: 24px;
+  height: 38px;
+  border: 2px solid rgba(255, 255, 255, 0.7);
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  padding-top: 5px;
+}
 
-  <div class="hero-content">
-    <span class="hero-label">Est. 1990 — Classic Automotive Excellence</span>
-    <h1 class="hero-title">Restoring <em>Legends,</em><br>One Classic at a Time</h1>
-    <p class="hero-sub">We breathe new life into vintage automobiles, preserving automotive heritage with uncompromising craftsmanship.</p>
-  </div>
+.scroll-wheel {
+  width: 3px;
+  height: 7px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 2px;
+  animation: scrollWheel 1.6s ease-in-out infinite;
+}
 
-  <div class="hero-dots" id="heroDots"></div>
+@keyframes scrollWheel {
+  0%   { transform: translateY(0);    opacity: 1; }
+  60%  { transform: translateY(10px); opacity: 0; }
+  61%  { transform: translateY(0);    opacity: 0; }
+  100% { transform: translateY(0);    opacity: 1; }
+}
 
-  
-  <div class="scroll-indicator" id="scrollIndicator">
-    <div class="mouse">
-      <div class="wheel"></div>
-    </div>
-    <div class="arrows">
-      <span></span>
-      <span></span>
-      <span></span>
-    </div>
-  </div>
+.scroll-arrows {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0px;
+}
 
-</section>
-  <!-- Story Preview -->
-  <section class="section" id="storySection">
-    <div class="grid-2">
-      <div class="story-img-placeholder">
-        <img src="https://images.unsplash.com/photo-1603386329225-868f9b1ee6c9?w=600&q=80" alt="Our Story" onerror="this.style.display='none'">
-      </div>
-      <div class="story-text">
-        <span class="section-label">Our Story</span>
-        <h2 class="section-title">A Passion Born in the Garage</h2>
-        <div class="section-line"></div>
-        <p>Founded in 1990 by master craftsman Rodrick Thompson, RodricksRestorations began as a small garage dedicated to preserving the golden age of automotive design.</p>
-        <p>What started as a passion project has evolved into one of the most respected restoration workshops in the country, with over 500 completed restorations and numerous industry awards.</p>
-        <button class="btn-primary" style="margin-top:1.5rem" onclick="showPage('about')">Our Full Story</button>
-      </div>
-    </div>
-  </section>
+.scroll-arrows span {
+  display: block;
+  width: 10px;
+  height: 10px;
+  border-right: 2px solid rgba(255, 255, 255, 0.8);
+  border-bottom: 2px solid rgba(255, 255, 255, 0.8);
+  transform: rotate(45deg);
+  animation: scrollArrows 1.6s ease-in-out infinite;
+}
 
-  <!-- Services Preview -->
-  <section class="section" id="servicesPreview">
-    <div class="text-center" style="margin-bottom:3rem">
-      <span class="section-label">What We Do</span>
-      <h2 class="section-title">Our Services</h2>
-      <div class="section-line center"></div>
-    </div>
-    <div class="grid-4" id="servicesPreviewGrid"></div>
-    <div class="text-center" style="margin-top:3rem">
-      <button class="btn-outline" onclick="showPage('services')">View All Services</button>
-    </div>
-  </section>
+.scroll-arrows span:nth-child(1) { animation-delay: 0s;   opacity: 0.3; }
+.scroll-arrows span:nth-child(2) { animation-delay: 0.2s; opacity: 0.6; }
+.scroll-arrows span:nth-child(3) { animation-delay: 0.4s; opacity: 0.9; }
 
-  <!-- Metrics -->
-  <section id="metricsSection">
-    <div class="metrics-grid">
-      <div><span class="metric-num" id="m1">500+</span><span class="metric-label">Cars Restored</span></div>
-      <div><span class="metric-num" id="m2">34</span><span class="metric-label">Years of Excellence</span></div>
-      <div><span class="metric-num" id="m3">18</span><span class="metric-label">Industry Awards</span></div>
-      <div><span class="metric-num" id="m4">98%</span><span class="metric-label">Client Satisfaction</span></div>
-    </div>
-  </section>
+@keyframes scrollArrows {
+  0%   { transform: rotate(45deg) translate(0, 0);     opacity: 0.3; }
+  50%  { transform: rotate(45deg) translate(3px, 3px); opacity: 1;   }
+  100% { transform: rotate(45deg) translate(0, 0);     opacity: 0.3; }
+}
 
-  <!-- Featured Projects -->
-  <section class="section" id="featuredSection" style="background:var(--dark2)">
-    <div style="margin-bottom:2.5rem;display:flex;align-items:flex-end;justify-content:space-between">
-      <div>
-        <span class="section-label">Highlight Projects</span>
-        <h2 class="section-title">Featured Restorations</h2>
-        <div class="section-line"></div>
-      </div>
-      <button class="btn-outline" onclick="showPage('restore')">All Projects</button>
-    </div>
-    <div class="featured-grid" id="featuredGrid"></div>
-  </section>
-
-  <footer>
-    <div class="footer-logo">RodricksRestorations</div>
-    <div class="footer-copy">© 2024 RodricksRestorations. All rights reserved.</div>
-    <div class="footer-links">
-      <a onclick="showPage('restore')">Restoration</a>
-      <a onclick="showPage('services')">Services</a>
-      <a onclick="showPage('contact')">Contact</a>
-    </div>
-  </footer>
-</div>
-
-<!-- ========== RESTORATION PAGE ========== -->
-<div class="page" id="page-restore">
-  
-  <div class="restore-header" style="padding-top:7rem">
-    <button class="page-back-btn" onclick="goBackPage()">← Back</button>
-    <span class="section-label">Our Portfolio</span>
-    <h1 class="section-title">Restoration Projects</h1>
-    <div class="section-line"></div>
-  </div>
-  <section style="padding:3rem 6%">
-    <div class="projects-tabs">
-      <button class="tab-btn active" onclick="switchTab('current',this)">Current Projects</button>
-      <button class="tab-btn" onclick="switchTab('finished',this)">Finished Projects</button>
-    </div>
-    <div id="projectsGrid" class="projects-grid"></div>
-  </section>
-  <footer>
-    <div class="footer-logo">RodricksRestorations</div>
-    <div class="footer-copy">© 2024 RodricksRestorations. All rights reserved.</div>
-    <div class="footer-links">
-      <a onclick="showPage('home')">Home</a>
-      <a onclick="showPage('services')">Services</a>
-      <a onclick="showPage('contact')">Contact</a>
-    </div>
-  </footer>
-</div>
-
-<!-- ========== PROJECT DETAIL PAGE ========== -->
-<div class="page" id="page-projectDetail">
-  
-  <div class="detail-hero" id="detailHero">
-    <div class="detail-hero-content">
-      <span class="section-label" id="detailCategory">Finished Project</span>
-      <h1 id="detailTitle">1967 Porsche 911</h1>
-      <p style="font-size:0.8rem;color:#514c45;margin-top:0.5rem" id="detailYear">Completed: 2023</p>
-    </div>
-  </div>
-  <div class="detail-body">
-    <button class="page-back-btn" onclick="showPage('restore')">← Back to Projects</button>
-    <div class="project-status-panel">
-      <span class="project-status-pill" id="detailStatus">In Progress</span>
-      <span class="project-last-updated" id="detailLastUpdated">Last Updated: Not available</span>
-    </div>
-    <div class="grid-2" style="gap:5rem;align-items:start">
-      <div>
-        <span class="section-label">Restoration Timeline</span>
-        <h2 class="section-title" style="font-size:1.6rem">The Process</h2>
-        <div class="section-line"></div>
-        <div class="timeline" id="detailTimeline"></div>
-      </div>
-      <div>
-        <span class="section-label">Project Gallery</span>
-        <h2 class="section-title" style="font-size:1.6rem">Images</h2>
-        <div class="section-line"></div>
-        <div class="detail-images" id="detailImages"></div>
-        <div style="margin-top:2rem">
-          <span class="section-label">Final Outcome</span>
-          <p id="detailOutcome" style="font-size:0.83rem;color:#5f5a52;line-height:1.9"></p>
-        </div>
-      </div>
-    </div>
-  </div>
-  <footer>
-    <div class="footer-logo">RodricksRestorations</div>
-    <div class="footer-copy">© 2024 RodricksRestorations. All rights reserved.</div>
-    <div class="footer-links">
-      <a onclick="showPage('home')">Home</a>
-      <a onclick="showPage('restore')">Restoration</a>
-      <a onclick="showPage('contact')">Contact</a>
-    </div>
-  </footer>
-</div>
-
-<!-- ========== SERVICES PAGE ========== -->
-<div class="page" id="page-services">
-  
-  <div class="services-page-header" style="padding-top:8rem">
-    <button class="page-back-btn" onclick="goBackPage()">← Back</button>
-    <span class="section-label">What We Offer</span>
-    <h1 class="section-title">Our Services</h1>
-    <div class="section-line"></div>
-  </div>
-  <section style="padding:3rem 6%">
-    <div class="services-full-grid" id="servicesFullGrid"></div>
-  </section>
-  <div class="service-detail" id="serviceDetailSection">
-    <div class="service-detail-grid">
-      <div>
-        <span class="section-label">Featured Service</span>
-        <h2>Engine Building &amp; Rebuilding</h2>
-        <div class="section-line"></div>
-        <p>Our team brings decades of experience in the rebuilding and development of a wide range of pre- and post-war engines. These include WO and Derby Bentleys, Lagonda, Alvis, Amilcar, Hispano-Suiza, Lancia, Rolls-Royce, Ferrari, Mercedes-Benz, BMW and Bugatti.</p>
-        <p>Our fully equipped engine shop houses an extensive range of machining equipment, enabling us to carry out every stage of engine manufacture and rebuild in house. We also adapt vintage engines to run smoothly and reliably on modern fuels.</p>
-        <p>With the addition of our state-of-the-art dynamometer facility, we can now fully harness the expertise of our in-house team to analyse, develop and precisely tune almost any engine, unlocking significant gains in both performance and efficiency.</p>
-      </div>
-      <div>
-        <img src="https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=600&q=80" class="service-detail-img" alt="Engine Building" onerror="this.style.background='var(--dark3)'">
-      </div>
-    </div>
-  </div>
-  <footer>
-    <div class="footer-logo">RodricksRestorations</div>
-    <div class="footer-copy">© 2024 RodricksRestorations. All rights reserved.</div>
-    <div class="footer-links">
-      <a onclick="showPage('home')">Home</a>
-      <a onclick="showPage('restore')">Restoration</a>
-      <a onclick="showPage('contact')">Contact</a>
-    </div>
-  </footer>
-</div>
-
-<!-- ========== ABOUT PAGE ========== -->
-<div class="page" id="page-about">
-  
-  <div class="about-header" style="padding-top:8rem">
-    <button class="page-back-btn" onclick="goBackPage()">← Back</button>
-    <span class="section-label">Who We Are</span>
-    <h1 class="section-title">About RodricksRestorations</h1>
-    <div class="section-line"></div>
-  </div>
-  <section class="about-story">
-    <div class="about-story-grid">
-      <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80" class="about-story-img" alt="Our Story" onerror="this.style.background='var(--dark3)'">
-      <div class="about-story-text">
-        <span class="section-label">Our Story</span>
-        <h2>A Lifelong Passion<br><em>for Classic Cars</em></h2>
-        <div class="section-line"></div>
-        <p>Founded in 1990 by master craftsman Rodrick Thompson, RodricksRestorations began as a small garage dedicated to preserving the golden age of automotive design.</p>
-        <p>Our philosophy is simple: every classic automobile deserves to be restored with the same care and attention to detail that went into building it in the first place. We combine traditional craftsmanship with modern engineering to deliver results that exceed expectations.</p>
-        <p>Today, we are proud to be one of the most respected restoration workshops in the country, having completed over 500 projects and earned 18 industry awards.</p>
-      </div>
-    </div>
-  </section>
-  <section class="values-section">
-    <span class="section-label text-center" style="display:block;text-align:center">What Drives Us</span>
-    <h2 class="section-title text-center" style="text-align:center">Our Values</h2>
-    <div class="section-line center"></div>
-    <div class="values-grid" style="margin-top:2rem">
-      <div class="value-card">
-        <h4>Uncompromising Quality</h4>
-        <p>Every component, every stitch, every coat of paint is applied with meticulous attention to detail. We never cut corners.</p>
-      </div>
-      <div class="value-card">
-        <h4>Historical Accuracy</h4>
-        <p>We research each vehicle extensively to ensure restorations honour the original manufacturer's specifications and intent.</p>
-      </div>
-      <div class="value-card">
-        <h4>Client Partnership</h4>
-        <p>We work closely with owners throughout every stage, providing regular updates and involving them in key decisions.</p>
-      </div>
-    </div>
-  </section>
-  <section class="milestones">
-    <span class="section-label" style="display:block;text-align:center">Our Journey</span>
-    <h2>Milestones</h2>
-    <div class="section-line center"></div>
-    <div class="milestones-timeline">
-      <div class="milestone">
-        <div class="milestone-right">
-          <span class="milestone-year">1990</span>
-        </div>
-        <div class="milestone-dot"></div>
-        <div class="milestone-right">
-          <div class="milestone-text">
-            <h4>Founded</h4>
-            <p>Rodrick Thompson opens a modest workshop with a single lift and a dream of preserving automotive history.</p>
-          </div>
-        </div>
-      </div>
-      <div class="milestone">
-        <div class="milestone-right">
-          <div class="milestone-text">
-            <h4>First Award</h4>
-            <p>Won Best Restoration at the National Classic Car Show for a 1952 Jaguar XK120.</p>
-          </div>
-        </div>
-        <div class="milestone-dot"></div>
-        <div class="milestone-right">
-          <span class="milestone-year">1998</span>
-        </div>
-      </div>
-      <div class="milestone">
-        <div class="milestone-right">
-          <span class="milestone-year">2005</span>
-        </div>
-        <div class="milestone-dot"></div>
-        <div class="milestone-right">
-          <div class="milestone-text">
-            <h4>New Facility</h4>
-            <p>Expanded to a state-of-the-art 12,000 sq ft facility with dedicated metalwork, paint, and engineering departments.</p>
-          </div>
-        </div>
-      </div>
-      <div class="milestone">
-        <div class="milestone-right">
-          <div class="milestone-text">
-            <h4>100th Restoration</h4>
-            <p>Celebrated our 100th completed restoration — a stunning 1963 Ferrari 250 GTE.</p>
-          </div>
-        </div>
-        <div class="milestone-dot"></div>
-        <div class="milestone-right">
-          <span class="milestone-year">2010</span>
-        </div>
-      </div>
-      <div class="milestone">
-        <div class="milestone-right">
-          <span class="milestone-year">2020</span>
-        </div>
-        <div class="milestone-dot"></div>
-        <div class="milestone-right">
-          <div class="milestone-text">
-            <h4>Race Partnership</h4>
-            <p>Formed a partnership with Race Techniques to deliver high-performance engine rebuilds for competition-specification vehicles.</p>
-          </div>
-        </div>
-      </div>
-      <div class="milestone">
-        <div class="milestone-right">
-          <div class="milestone-text">
-            <h4>500+ Restorations</h4>
-            <p>Surpassed 500 completed restorations, cementing our status as one of the UK's leading classic car workshops.</p>
-          </div>
-        </div>
-        <div class="milestone-dot"></div>
-        <div class="milestone-right">
-          <span class="milestone-year">2024</span>
-        </div>
-      </div>
-    </div>
-  </section>
-  <footer>
-    <div class="footer-logo">RodricksRestorations</div>
-    <div class="footer-copy">© 2024 RodricksRestorations. All rights reserved.</div>
-    <div class="footer-links">
-      <a onclick="showPage('home')">Home</a>
-      <a onclick="showPage('restore')">Restoration</a>
-      <a onclick="showPage('contact')">Contact</a>
-    </div>
-  </footer>
-</div>
-
-<!-- ========== CONTACT PAGE ========== -->
-<div class="page" id="page-contact">
-  
-  <div class="contact-header" style="padding-top:8rem">
-    <button class="page-back-btn" onclick="goBackPage()">← Back</button>
-    <span class="section-label">Get In Touch</span>
-    <h1 class="section-title">Contact Us</h1>
-    <div class="section-line"></div>
-  </div>
-  <div class="contact-body">
-    <div class="contact-info">
-      <h3>Contact Details</h3>
-      <div class="section-line"></div>
-      <div class="contact-item">
-        <div class="contact-item-icon">📞</div>
-        <div>
-          <span class="contact-item-label">Phone</span>
-          <div class="contact-item-value">(555) 123-4567</div>
-        </div>
-      </div>
-      <div class="contact-item">
-        <div class="contact-item-icon">✉️</div>
-        <div>
-          <span class="contact-item-label">Email</span>
-          <div class="contact-item-value">info@rodricksrestorations.com</div>
-        </div>
-      </div>
-      <div class="contact-item">
-        <div class="contact-item-icon">📍</div>
-        <div>
-          <span class="contact-item-label">Address</span>
-          <div class="contact-item-value">42 Heritage Lane<br>Classic City, CA 90210</div>
-        </div>
-      </div>
-      <div class="contact-map">📍 Classic City, CA 90210</div>
-    </div>
-    <div class="contact-form">
-      <h3>Send Us a Message</h3>
-      <div class="section-line"></div>
-      <div class="form-group">
-        <label>Name <span class="form-required">*</span></label>
-        <input type="text" id="contactName" placeholder="Your full name">
-      </div>
-      <div class="form-group">
-        <label>Phone <span class="form-required">*</span></label>
-        <input type="tel" id="contactPhone" placeholder="Your phone number">
-      </div>
-      <div class="form-group">
-        <label>Email <span class="form-required">*</span></label>
-        <input type="email" id="contactEmail" placeholder="your@email.com">
-      </div>
-      <div class="form-group">
-        <label>Message <span class="form-required">*</span></label>
-        <textarea id="contactMessage" placeholder="Tell us about your vehicle and restoration goals..."></textarea>
-      </div>
-      <button class="btn-primary" onclick="submitContact()">Send Message</button>
-      <div class="submit-msg" id="submitMsg">✓ Your message has been sent. We'll be in touch soon.</div>
-    </div>
-  </div>
-  <footer>
-    <div class="footer-logo">RodricksRestorations</div>
-    <div class="footer-copy">© 2024 RodricksRestorations. All rights reserved.</div>
-    <div class="footer-links">
-      <a onclick="showPage('home')">Home</a>
-      <a onclick="showPage('restore')">Restoration</a>
-      <a onclick="showPage('services')">Services</a>
-    </div>
-  </footer>
-</div>
-
-<!-- ========== ADMIN LOGIN ========== -->
-<div id="adminLogin">
-  <div class="login-box">
-    <h2>Admin Panel</h2>
-    <p>Sign in to manage website content</p>
-    <div class="form-group">
-      <label>Username</label>
-      <input type="text" id="loginUser" placeholder="admin" value="">
-    </div>
-    <div class="form-group" style="margin-top:1.2rem">
-      <label>Password</label>
-      <input type="password" id="loginPass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
-    </div>
-    <button class="btn-primary" style="width:100%;margin-top:1.5rem" onclick="doLogin()">Sign In</button>
-    <div class="login-error" id="loginError">Invalid username or password.</div>
-    <button onclick="closeAdminLogin()" style="width:100%;margin-top:0.8rem;background:transparent;border:none;color:var(--muted);font-size:0.75rem;cursor:pointer;font-family:'Montserrat',sans-serif;letter-spacing:0.1em">Cancel</button>
-  </div>
-</div>
-
-<!-- ========== ADMIN PANEL ========== -->
-<div id="adminPanel">
-  <div class="admin-sidebar">
-    <div class="admin-logo">
-      RodricksRestorations
-      <span>Admin Dashboard</span>
-    </div>
-    <nav class="admin-nav">
-      <div class="admin-nav-item active" onclick="adminNav('dashboard',this)"><span class="nav-icon">📊</span>Dashboard</div>
-      <div class="admin-nav-item" onclick="adminNav('users',this)"><span class="nav-icon">👤</span>Users</div>
-      <div class="admin-nav-item" onclick="adminNav('heroImages',this)"><span class="nav-icon">🖼️</span>Hero Images</div>
-      <div class="admin-nav-item" onclick="adminNav('projects',this)"><span class="nav-icon">🚗</span>Projects</div>
-      <div class="admin-nav-item" onclick="adminNav('addProject',this)"><span class="nav-icon">➕</span>Add Project</div>
-      <div class="admin-nav-item" onclick="adminNav('featured',this)"><span class="nav-icon">⭐</span>Featured Projects</div>
-      <div class="admin-nav-item" onclick="adminNav('services',this)"><span class="nav-icon">🔧</span>Services</div>
-      <div class="admin-nav-item" onclick="adminNav('messages',this)"><span class="nav-icon">✉️</span>Messages <span id="msgBadge" style="background:var(--gold);color:var(--dark);border-radius:10px;font-size:0.6rem;padding:1px 6px;margin-left:auto"></span></div>
-      <div class="admin-nav-item" onclick="adminNav('metrics',this)"><span class="nav-icon">📈</span>Site Metrics</div>
-    </nav>
-    <div class="admin-sidebar-footer">
-      <button class="admin-close-btn" onclick="closeAdmin()" style="margin-bottom:0.4rem">✕ Exit Admin</button>
-      <button class="admin-close-btn" onclick="logoutAdmin()" style="border-color:rgba(192,57,43,0.5);color:#c0392b">⏻ Logout</button>
-    </div>
-  </div>
-
-  <div class="admin-main">
-    <div class="admin-topbar">
-      <h2 id="adminTopTitle">Dashboard</h2>
-      <span style="font-size:0.75rem;color:var(--muted)">Welcome, Administrator</span>
-    </div>
-    <div class="admin-content">
-
-      <!-- DASHBOARD -->
-      <div class="admin-section active" id="sec-dashboard">
-        <div class="admin-stats">
-          <div class="stat-card"><span class="stat-num" id="dash-projects">0</span><span class="stat-label">Total Projects</span></div>
-          <div class="stat-card"><span class="stat-num" id="dash-current">0</span><span class="stat-label">Current Projects</span></div>
-          <div class="stat-card"><span class="stat-num" id="dash-messages">0</span><span class="stat-label">Messages</span></div>
-          <div class="stat-card"><span class="stat-num" id="dash-unread">0</span><span class="stat-label">Unread Messages</span></div>
-        </div>
-        <div class="admin-table-wrap">
-          <div class="admin-table-header">
-            <h3>Recent Projects</h3>
-            <button class="action-btn action-edit" onclick="adminNav('addProject',adminNavItem('addProject'))">+ Add New</button>
-          </div>
-          <table>
-            <thead><tr><th>Project Name</th><th>Year</th><th>Status</th><th>Featured</th><th>Actions</th></tr></thead>
-            <tbody id="dashProjectsTable"></tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- USERS -->
-      <div class="admin-section" id="sec-users">
-        <div class="admin-form-card">
-          <h3>Add New User</h3>
-          <div class="user-form-inline">
-            <div class="admin-form-group">
-              <label>Username *</label>
-              <input type="text" id="newUsername" placeholder="username" autocomplete="off">
-            </div>
-            <div class="admin-form-group">
-              <label>Password * <span style="font-size:0.65rem;color:var(--muted)">(min 4 chars)</span></label>
-              <input type="password" id="newPassword" placeholder="••••••••" autocomplete="new-password">
-            </div>
-            <div class="admin-form-group">
-              <label>Role</label>
-              <select id="newRole">
-                <option value="Editor">Editor</option>
-                <option value="Administrator">Administrator</option>
-              </select>
-            </div>
-            <button class="btn-admin btn-admin-primary" onclick="addUser()">Add User</button>
-          </div>
-          <div class="form-error-msg" id="userFormError"></div>
-        </div>
-        <div class="admin-form-card" style="margin-top:1.2rem">
-          <h3>All Users</h3>
-          <p style="font-size:0.8rem;color:var(--muted);margin-bottom:1.2rem">Passwords are encoded. You cannot recover them — reset if forgotten.</p>
-          <table>
-            <thead><tr><th>Username</th><th>Role</th><th>Status</th><th>Action</th></tr></thead>
-            <tbody id="usersTable"></tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- HERO IMAGES -->
-      <div class="admin-section" id="sec-heroImages">
-        <div class="admin-form-card">
-          <h3>Hero Image Slider (10 images)</h3>
-          <div class="hero-img-grid" id="heroImgGrid"></div>
-          <div class="upload-area" onclick="document.getElementById('heroUpload').click()">
-            <div style="font-size:2rem">🖼️</div>
-            <p>Click to upload hero images</p>
-            <p style="font-size:0.7rem;margin-top:0.3rem;color:var(--muted2)">JPG, PNG — Max 10 images</p>
-            <input type="file" id="heroUpload" multiple accept="image/*" style="display:none" onchange="handleHeroUpload(event)">
-          </div>
-          <div class="form-actions">
-            <button class="btn-admin btn-admin-primary" onclick="saveHeroImages()">Save Changes</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- PROJECTS -->
-      <div class="admin-section" id="sec-projects">
-        <div class="admin-table-wrap">
-          <div class="admin-table-header">
-            <h3>All Projects</h3>
-            <button class="action-btn action-edit" onclick="adminNav('addProject',adminNavItem('addProject'))">+ Add New</button>
-          </div>
-          <table>
-            <thead><tr><th>Car Name</th><th>Year</th><th>Status</th><th>Award</th><th>Featured</th><th>Actions</th></tr></thead>
-            <tbody id="allProjectsTable"></tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- ADD PROJECT -->
-      <div class="admin-section" id="sec-addProject">
-        <div class="admin-form-card">
-          <h3>Add / Edit Project</h3>
-          <input type="hidden" id="editProjectId" value="">
-          <div class="admin-form-grid">
-            <div class="admin-form-group">
-              <label>Car Name *</label>
-              <input type="text" id="pName" placeholder="e.g. 1967 Porsche 911">
-            </div>
-            <div class="admin-form-group">
-              <label>Year *</label>
-              <input type="text" id="pYear" placeholder="e.g. 2023">
-            </div>
-            <div class="admin-form-group">
-              <label>Status *</label>
-              <select id="pStatus">
-                <option value="current">Current</option>
-                <option value="finished">Finished</option>
-              </select>
-            </div>
-            <div class="admin-form-group">
-              <label>Category</label>
-              <input type="text" id="pCategory" placeholder="e.g. Classic German, Italian Sports">
-            </div>
-          </div>
-          <div class="admin-form-group">
-            <label>Description</label>
-            <textarea id="pDesc" placeholder="Brief project description..."></textarea>
-          </div>
-          <div class="admin-form-group">
-            <label>Final Outcome</label>
-            <textarea id="pOutcome" placeholder="Describe the final result..."></textarea>
-          </div>
-          <div class="admin-form-group">
-            <label>Project Images <span style="color:var(--red)">*</span> <span style="font-weight:400;font-size:0.72rem;color:var(--muted)">(min 3 · max 5 · no duplicates)</span></label>
-            <div class="img-builder" id="imgBuilder"></div>
-            <div class="img-error" id="imgError">Please add at least 3 unique, non-empty image URLs.</div>
-            <button type="button" class="img-builder-add" onclick="addImgRow()">+ Add Image</button>
-          </div>
-          <input type="hidden" id="pImg" value="">
-          <div class="admin-form-group">
-            <label>
-              <input type="checkbox" id="pFeatured" style="width:auto;margin-right:0.5rem">
-              Mark as Featured Project
-            </label>
-          </div>
-          <div class="admin-form-group">
-            <label>
-              <input type="checkbox" id="pAward" style="width:auto;margin-right:0.5rem">
-              Award-Winning Project
-            </label>
-          </div>
-          <div class="admin-form-group">
-            <label>Restoration Timeline</label>
-            <div class="timeline-builder" id="timelineBuilder">
-              <div id="timelineEntries"></div>
-              <button class="add-timeline-btn" onclick="addTimelineEntry()">+ Add Timeline Step</button>
-            </div>
-          </div>
-          <div class="form-actions">
-            <button class="btn-admin btn-admin-primary" onclick="saveProject()">Save Project</button>
-            <button class="btn-admin btn-admin-secondary" onclick="clearProjectForm()">Clear Form</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- FEATURED -->
-      <div class="admin-section" id="sec-featured">
-        <div class="admin-form-card">
-          <h3>Manage Featured Projects</h3>
-          <p style="font-size:0.8rem;color:var(--muted);margin-bottom:1.5rem">Toggle which projects appear in the Featured section on the homepage.</p>
-          <table>
-            <thead><tr><th>Project Name</th><th>Status</th><th>Currently Featured</th><th>Award</th><th>Action</th></tr></thead>
-            <tbody id="featuredTable"></tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- SERVICES -->
-      <div class="admin-section" id="sec-services">
-        <div class="admin-table-wrap">
-          <div class="admin-table-header"><h3>Services</h3></div>
-          <table>
-            <thead><tr><th>Service Name</th><th>Description</th><th>Actions</th></tr></thead>
-            <tbody id="servicesTable"></tbody>
-          </table>
-        </div>
-        <div class="admin-form-card" style="margin-top:1.5rem">
-          <h3>Add / Edit Service</h3>
-          <div class="admin-form-group">
-            <label>Service Name</label>
-            <input type="text" id="svcName" placeholder="e.g. Engine Building">
-          </div>
-          <div class="admin-form-group">
-            <label>Short Description</label>
-            <textarea id="svcDesc" placeholder="Brief description..." style="min-height:80px"></textarea>
-          </div>
-          <div class="admin-form-group">
-            <label>Icon (emoji)</label>
-            <input type="text" id="svcIcon" placeholder="🔧">
-          </div>
-          <div class="admin-form-group">
-            <label>Image URL (optional)</label>
-            <input type="text" id="svcImg" placeholder="https://...">
-          </div>
-          <div class="form-actions">
-            <button class="btn-admin btn-admin-primary" onclick="saveService()">Save Service</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- MESSAGES -->
-      <div class="admin-section" id="sec-messages">
-        <div style="margin-bottom:1rem;display:flex;align-items:center;justify-content:space-between">
-          <h3 style="font-family:'Playfair Display',serif;font-size:1.1rem">Contact Messages</h3>
-          <button class="action-btn action-del" onclick="clearAllMessages()">Clear All</button>
-        </div>
-        <div id="messagesList"></div>
-      </div>
-
-      <!-- METRICS -->
-      <div class="admin-section" id="sec-metrics">
-        <div class="admin-form-card">
-          <h3>Site Metrics (Homepage)</h3>
-          <div class="admin-form-grid">
-            <div class="admin-form-group">
-              <label>Cars Restored</label>
-              <input type="text" id="met1" placeholder="500+">
-            </div>
-            <div class="admin-form-group">
-              <label>Years of Excellence</label>
-              <input type="text" id="met2" placeholder="34">
-            </div>
-            <div class="admin-form-group">
-              <label>Industry Awards</label>
-              <input type="text" id="met3" placeholder="18">
-            </div>
-            <div class="admin-form-group">
-              <label>Client Satisfaction</label>
-              <input type="text" id="met4" placeholder="98%">
-            </div>
-          </div>
-          <div class="form-actions">
-            <button class="btn-admin btn-admin-primary" onclick="saveMetrics()">Update Metrics</button>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</div>
-
-<!-- NOTIFICATION -->
-<div class="admin-notification" id="adminNotif"></div>
-<script src="script.js"></script>
-</body>
-</html>
+@media (max-height: 500px) {
+  .scroll-indicator { display: none; }
+}
