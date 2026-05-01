@@ -1134,79 +1134,84 @@ footer{
   .user-form-inline{flex-direction:column}
 }
 
-/* Scroll Indicator */
+/* ===========================
+   SCROLL INDICATOR
+   =========================== */
 #heroSection {
   position: relative;
 }
 
 .scroll-indicator {
   position: absolute;
-  bottom: 30px;
+  bottom: 2.2rem;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
   flex-direction: column;
   align-items: center;
-  z-index: 999;
+  gap: 0.4rem;
+  z-index: 10;
   opacity: 1;
-  transition: opacity 0.4s ease;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
 }
 
 .scroll-indicator.hide {
   opacity: 0;
-  pointer-events: none;
 }
 
-.mouse {
-  width: 26px;
-  height: 42px;
-  border: 2px solid #fff;
-  border-radius: 20px;
-  position: relative;
+.scroll-mouse {
+  width: 24px;
+  height: 38px;
+  border: 2px solid rgba(255, 255, 255, 0.7);
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  padding-top: 5px;
 }
 
-.wheel {
-  width: 4px;
-  height: 8px;
-  background: #fff;
+.scroll-wheel {
+  width: 3px;
+  height: 7px;
+  background: rgba(255, 255, 255, 0.9);
   border-radius: 2px;
-  position: absolute;
-  top: 8px;
-  left: 50%;
-  transform: translateX(-50%);
-  animation: wheelMove 1.5s infinite;
+  animation: scrollWheel 1.6s ease-in-out infinite;
 }
 
-@keyframes wheelMove {
-  0% { opacity: 1; top: 8px; }
-  100% { opacity: 0; top: 20px; }
+@keyframes scrollWheel {
+  0%   { transform: translateY(0);    opacity: 1; }
+  60%  { transform: translateY(10px); opacity: 0; }
+  61%  { transform: translateY(0);    opacity: 0; }
+  100% { transform: translateY(0);    opacity: 1; }
 }
 
-.arrows {
-  margin-top: 8px;
+.scroll-arrows {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0px;
 }
 
-.arrows span {
+.scroll-arrows span {
   display: block;
   width: 10px;
   height: 10px;
-  border-left: 2px solid #fff;
-  border-bottom: 2px solid #fff;
-  transform: rotate(-45deg);
-  margin: 4px auto;
-  animation: arrowBounce 1.5s infinite;
+  border-right: 2px solid rgba(255, 255, 255, 0.8);
+  border-bottom: 2px solid rgba(255, 255, 255, 0.8);
+  transform: rotate(45deg);
+  animation: scrollArrows 1.6s ease-in-out infinite;
 }
 
-.arrows span:nth-child(2) {
-  animation-delay: 0.2s;
+.scroll-arrows span:nth-child(1) { animation-delay: 0s;   opacity: 0.3; }
+.scroll-arrows span:nth-child(2) { animation-delay: 0.2s; opacity: 0.6; }
+.scroll-arrows span:nth-child(3) { animation-delay: 0.4s; opacity: 0.9; }
+
+@keyframes scrollArrows {
+  0%   { transform: rotate(45deg) translate(0, 0);     opacity: 0.3; }
+  50%  { transform: rotate(45deg) translate(3px, 3px); opacity: 1;   }
+  100% { transform: rotate(45deg) translate(0, 0);     opacity: 0.3; }
 }
 
-.arrows span:nth-child(3) {
-  animation-delay: 0.4s;
-}
-
-@keyframes arrowBounce {
-  0% { opacity: 0; transform: translateY(0) rotate(-45deg); }
-  50% { opacity: 1; transform: translateY(6px) rotate(-45deg); }
-  100% { opacity: 0; transform: translateY(12px) rotate(-45deg); }
+@media (max-height: 500px) {
+  .scroll-indicator { display: none; }
 }
