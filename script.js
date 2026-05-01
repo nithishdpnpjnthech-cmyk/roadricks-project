@@ -1048,17 +1048,16 @@ function isBase64(str){
 document.addEventListener('DOMContentLoaded', () => {
   loadData();
   renderHome();
-
-  // 🔥 Scroll indicator logic
-  const scrollIndicator = document.getElementById('scrollIndicator');
-
-  if (scrollIndicator) {
-    window.addEventListener('scroll', () => {
-      if (window.scrollY > 50) {
-        scrollIndicator.classList.add('hide');
-      } else {
-        scrollIndicator.classList.remove('hide');
-      }
-    });
-  }
 });
+// ===========================
+// SCROLL INDICATOR
+// ===========================
+window.addEventListener('scroll', function () {
+  var indicator = document.getElementById('scrollIndicator');
+  if (!indicator) return;
+  if (window.scrollY > 50) {
+    indicator.classList.add('hide');
+  } else {
+    indicator.classList.remove('hide');
+  }
+}, { passive: true });
