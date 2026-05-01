@@ -1048,4 +1048,17 @@ function isBase64(str){
 document.addEventListener('DOMContentLoaded', () => {
   loadData();
   renderHome();
+
+  // 🔥 Scroll indicator logic
+  const scrollIndicator = document.getElementById('scrollIndicator');
+
+  if (scrollIndicator) {
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 50) {
+        scrollIndicator.classList.add('hide');
+      } else {
+        scrollIndicator.classList.remove('hide');
+      }
+    });
+  }
 });
