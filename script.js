@@ -962,13 +962,14 @@ function saveData() {
       messages:   data.messages,
       users:      data.users,
       metrics:    data.metrics,
-      heroImages: data.heroImages   // base64 strings — stored as-is, no filtering
+      heroImages: data.heroImages
     };
     localStorage.setItem('rodricks_data', JSON.stringify(payload));
   } catch(e) {
     if(e && e.name === 'QuotaExceededError') {
       console.warn('localStorage quota exceeded. Try removing some hero images.');
-      notify('Storage full — remove unused hero images and try again.', 'red');
+      // notify() may not be safe to call before DOM is ready — guard it
+      try { notify('Storage full — remove unused hero images and try again.', 'red'); } catch(_) {}
     } else {
       console.warn('Storage unavailable:', e);
     }
@@ -1011,18 +1012,10 @@ function isBase64(str){
   try{ return btoa(atob(str))===str; }catch(e){ return false; }
 }
 
-// Auto-save on data modifications
-const origSaveProject = saveProject;
-const origDeleteProject = deleteProject;
-const origSaveService = saveService;
-const origDeleteService = deleteService;
-const origSaveMetrics = saveMetrics;
-const origSubmitContact = submitContact;
-const origToggleFeatured = toggleFeatured;
-const origToggleAward = toggleAward;
-
 // ===========================
 // INIT
 // ===========================
-loadData();
-renderHome();
+document.addEventListener('DOMContentLoaded', () => {
+  loadData();
+  renderHome();
+});
