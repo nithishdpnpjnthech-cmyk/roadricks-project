@@ -156,7 +156,7 @@ function renderFeatured() {
   const [main,...sides] = featured;
   grid.innerHTML=`
     <div class="featured-main" onclick="openProject(${main.id})">
-      <img class="featured-img" src="${main.img}" alt="${main.name}" onerror="this.style.background='var(--dark3)'">
+      <img class="featured-img" src="${main.images && main.images.length ? main.images[0] : main.img}" alt="${main.name}" onerror="this.style.background='var(--dark3)'">
       <div class="featured-overlay">
         <div class="featured-info"><h3>${main.name}</h3><span>${main.category||main.status}</span></div>
       </div>
@@ -165,7 +165,7 @@ function renderFeatured() {
     <div class="featured-side">
       ${sides.map(p=>`
         <div class="featured-side-item" onclick="openProject(${p.id})">
-          <img class="featured-img" src="${p.img}" alt="${p.name}" onerror="this.style.background='var(--dark3)'">
+          <img class="featured-img" src="${p.images && p.images.length ? p.images[0] : p.img}" alt="${p.name}" onerror="this.style.background='var(--dark3)'">
           <div class="featured-overlay">
             <div class="featured-info"><h3 style="font-size:1rem">${p.name}</h3><span>${p.category||p.status}</span></div>
           </div>
@@ -199,7 +199,7 @@ function renderProjects() {
   const projects = data.projects.filter(p=>p.status===data.currentTab);
   grid.innerHTML = projects.length ? projects.map(p=>`
     <div class="project-card" onclick="openProject(${p.id})">
-      <img class="project-card-img" src="${p.img}" alt="${p.name}" onerror="this.style.background='var(--dark3)'">
+      <img class="project-card-img" src="${p.images && p.images.length ? p.images[0] : p.img}" alt="${p.name}" onerror="this.style.background='var(--dark3)'">
       <div class="project-card-overlay">
         <div class="project-card-info">
           <h4>${p.name}</h4>
@@ -222,7 +222,8 @@ function openProject(id) {
   document.getElementById('detailYear').textContent=p.status==='finished'?`Completed: ${p.year}`:`In Progress - ${p.year}`;
   document.getElementById('detailStatus').textContent=p.status==='finished'?'Completed':'In Progress';
   document.getElementById('detailLastUpdated').textContent=`Last Updated: ${latest ? formatDate(latest.date) : 'Not available'}`;
-  document.getElementById('detailHero').style.backgroundImage=`url('${p.img}')`;
+  const heroImg = (p.images && p.images.length) ? p.images[0] : p.img;
+  document.getElementById('detailHero').style.backgroundImage=`url('${heroImg}')`;
   document.getElementById('detailOutcome').textContent=p.outcome||'This project is currently in progress.';
   document.getElementById('detailTimeline').innerHTML=timeline.length ? timeline.map((t,i)=>`
     <div class="timeline-item ${i===0?'latest':''}">
@@ -622,7 +623,7 @@ function editProject(id){
   document.getElementById('timelineEntries').innerHTML='';
   (p.timeline||[]).forEach(t=>addTimelineEntry(t));
   // Load images into builder
-  const imgs=p.images&&p.images.length>=3 ? p.images : [p.img||'','',''];
+  const imgs=p.images&&p.images.length ? p.images : [p.img||''];
   populateImgBuilder(imgs);
 }
 
@@ -747,7 +748,7 @@ function saveProject(){
     category:document.getElementById('pCategory').value,
     desc:document.getElementById('pDesc').value,
     outcome:document.getElementById('pOutcome').value,
-    img:rawUrls[0]||'',
+    img:rawUrls.length ? rawUrls[0] : '',
     images:rawUrls,
     featured:document.getElementById('pFeatured').checked,
     award:document.getElementById('pAward').checked,
