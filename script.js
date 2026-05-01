@@ -503,45 +503,84 @@ function removeHeroImg(i){
 }
 
 function handleHeroUpload(e){
+  const MAX_WIDTH = 1200;  // resize to max 1200px wide
+  const QUALITY   = 0.7;   // JPEG compression quality (0-1)
+  const MAX_SLOTS = 10;
+
   const files = Array.from(e.target.files);
   if(!files.length) return;
 
+  const slotsAvailable = MAX_SLOTS - data.heroImages.length;
+  if(slotsAvailable <= 0) {
+    notify('Maximum 10 images reached.', 'red');
+    e.target.value = '';
+    return;
+  }
+
+  const filesToProcess = files.slice(0, slotsAvailable);
   let processed = 0;
 
-  files.forEach(f => {
-    if(data.heroImages.length >= 10) {
-      processed++;
-      if(processed === files.length) notify('Maximum 10 images reached.', 'red');
-      return;
-    }
-
+  function compressAndStore(file) {
     const reader = new FileReader();
 
     reader.onload = ev => {
-      if(data.heroImages.length < 10) {
-        data.heroImages.push(ev.target.result); // pure base64 — persists across refresh
-      }
-      processed++;
-      if(processed === files.length) {
-        renderAdminHeroImages();
-        renderHeroSlider();  // update live slider immediately
-        saveData();          // persist — no manual Save button needed
-        notify('Image(s) uploaded and saved!', 'green');
-      }
+      const img = new Image();
+
+      img.onload = () => {
+        // Resize down only — never scale up
+        let w = img.width;
+        let h = img.height;
+        if(w > MAX_WIDTH) {
+          h = Math.round(h * MAX_WIDTH / w);
+          w = MAX_WIDTH;
+        }
+
+        const canvas = document.createElement('canvas');
+        canvas.width  = w;
+        canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+
+        // Compress to JPEG — 80-95% smaller than raw PNG base64
+        const compressed = canvas.toDataURL('image/jpeg', QUALITY);
+
+        if(data.heroImages.length < MAX_SLOTS) {
+          data.heroImages.push(compressed);
+        }
+
+        processed++;
+        if(processed === filesToProcess.length) {
+          renderAdminHeroImages();
+          renderHeroSlider();
+          saveData();
+          notify('Image(s) uploaded and saved!', 'green');
+        }
+      };
+
+      img.onerror = () => {
+        console.error('Image decode failed for:', file.name);
+        processed++;
+        if(processed === filesToProcess.length) {
+          notify('One or more images could not be decoded.', 'red');
+          renderAdminHeroImages();
+        }
+      };
+
+      img.src = ev.target.result;
     };
 
     reader.onerror = () => {
+      console.error('FileReader failed for:', file.name);
       processed++;
-      console.error('FileReader failed for:', f.name);
-      if(processed === files.length) {
+      if(processed === filesToProcess.length) {
         notify('One or more images could not be read.', 'red');
         renderAdminHeroImages();
       }
     };
 
-    reader.readAsDataURL(f); // base64 only — no blob URLs
-  });
+    reader.readAsDataURL(file);
+  }
 
+  filesToProcess.forEach(compressAndStore);
   e.target.value = ''; // reset so same file can be re-selected
 }
 
