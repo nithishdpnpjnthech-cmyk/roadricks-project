@@ -495,40 +495,54 @@ function renderAdminHeroImages(){
 }
 
 function removeHeroImg(i){
-  data.heroImages.splice(i,1);
+  data.heroImages.splice(i, 1);
   renderAdminHeroImages();
-  saveData();
+  renderHeroSlider();  // keep live slider in sync
+  saveData();          // persist deletion immediately
   notify('Image removed');
 }
 
 function handleHeroUpload(e){
-  const files=Array.from(e.target.files);
+  const files = Array.from(e.target.files);
   if(!files.length) return;
-  let processed=0;
-  files.forEach(f=>{
-    if(data.heroImages.length>=10) { processed++; return; }
-    const reader=new FileReader();
-    reader.onload=ev=>{
-      if(data.heroImages.length<10){
-        data.heroImages.push(ev.target.result);
+
+  let processed = 0;
+
+  files.forEach(f => {
+    if(data.heroImages.length >= 10) {
+      processed++;
+      if(processed === files.length) notify('Maximum 10 images reached.', 'red');
+      return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = ev => {
+      if(data.heroImages.length < 10) {
+        data.heroImages.push(ev.target.result); // pure base64 — persists across refresh
       }
       processed++;
-      if(processed===files.length){
+      if(processed === files.length) {
         renderAdminHeroImages();
-        saveData();
-        notify('Image(s) uploaded and saved!','green');
+        renderHeroSlider();  // update live slider immediately
+        saveData();          // persist — no manual Save button needed
+        notify('Image(s) uploaded and saved!', 'green');
       }
     };
-    reader.onerror=()=>{
+
+    reader.onerror = () => {
       processed++;
-      notify('Failed to read one or more images','red');
-      if(processed===files.length){
+      console.error('FileReader failed for:', f.name);
+      if(processed === files.length) {
+        notify('One or more images could not be read.', 'red');
         renderAdminHeroImages();
       }
     };
-    reader.readAsDataURL(f);
+
+    reader.readAsDataURL(f); // base64 only — no blob URLs
   });
-  e.target.value='';
+
+  e.target.value = ''; // reset so same file can be re-selected
 }
 
 function saveHeroImages(){
@@ -942,22 +956,19 @@ function saveMetrics(){
 // ===========================
 function saveData() {
   try {
-    // Only persist non-blob images. Since handleHeroUpload now uses base64,
-    // blob URLs should never appear. The filter is kept as a safety net only.
-    const heroImagesToSave = data.heroImages.filter(img => img && !img.startsWith('blob:'));
     const payload = {
-      projects: data.projects,
-      services: data.services,
-      messages: data.messages,
-      users: data.users,
-      metrics: data.metrics,
-      heroImages: heroImagesToSave
+      projects:   data.projects,
+      services:   data.services,
+      messages:   data.messages,
+      users:      data.users,
+      metrics:    data.metrics,
+      heroImages: data.heroImages   // base64 strings — stored as-is, no filtering
     };
     localStorage.setItem('rodricks_data', JSON.stringify(payload));
   } catch(e) {
     if(e && e.name === 'QuotaExceededError') {
       console.warn('localStorage quota exceeded. Try removing some hero images.');
-      notify('Storage full — some images may not be saved. Try removing unused hero images.','red');
+      notify('Storage full — remove unused hero images and try again.', 'red');
     } else {
       console.warn('Storage unavailable:', e);
     }
@@ -969,25 +980,27 @@ function loadData() {
     const saved = localStorage.getItem('rodricks_data');
     if(saved) {
       const parsed = JSON.parse(saved);
-      if(parsed.projects && parsed.projects.length) data.projects = parsed.projects;
-      if(parsed.services && parsed.services.length) data.services = parsed.services;
-      if(parsed.messages) data.messages = parsed.messages;
-      if(parsed.users && parsed.users.length) data.users = parsed.users;
-      if(parsed.metrics) data.metrics = parsed.metrics;
-      // Restore heroImages: use saved value if it's a valid array (even empty),
-      // but only override the defaults when the key is explicitly present.
-      if(Object.prototype.hasOwnProperty.call(parsed, 'heroImages') && Array.isArray(parsed.heroImages)) {
-        // Filter out any stale blob URLs that may have been saved by an older version
-        const cleaned = parsed.heroImages.filter(img => img && !img.startsWith('blob:'));
-        data.heroImages = cleaned;
+      if(parsed.projects  && parsed.projects.length)  data.projects  = parsed.projects;
+      if(parsed.services  && parsed.services.length)  data.services  = parsed.services;
+      if(parsed.messages)                             data.messages  = parsed.messages;
+      if(parsed.users     && parsed.users.length)     data.users     = parsed.users;
+      if(parsed.metrics)                              data.metrics   = parsed.metrics;
+      // Only restore heroImages when the saved array is a non-empty valid array.
+      // Never overwrite the hardcoded defaults with an empty array — that causes a blank slider.
+      if(
+        Object.prototype.hasOwnProperty.call(parsed, 'heroImages') &&
+        Array.isArray(parsed.heroImages) &&
+        parsed.heroImages.length > 0
+      ) {
+        data.heroImages = parsed.heroImages;
       }
     }
     // Migrate: encode any plain-text passwords that aren't already base64
-    let migrated=false;
-    data.users=data.users.map(u=>{
-      if(u.password && !isBase64(u.password)){
-        migrated=true;
-        return {...u, password:btoa(u.password)};
+    let migrated = false;
+    data.users = data.users.map(u => {
+      if(u.password && !isBase64(u.password)) {
+        migrated = true;
+        return { ...u, password: btoa(u.password) };
       }
       return u;
     });
