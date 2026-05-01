@@ -69,19 +69,27 @@ function showPage(page, fromBack=false) {
     if(pageHistory.length > 12) pageHistory.shift();
   }
   closeMobileNav();
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.nav-links a').forEach(a=>a.classList.remove('active'));
-  const el = document.getElementById('page-'+targetPage) || document.getElementById('page-home');
+  // Hide ALL pages
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  // Clear all nav highlights
+  document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+  // Show target page — always fall back to home if element not found
+  const el = document.getElementById('page-' + targetPage) || document.getElementById('page-home');
+  if(!el) return; // guard: should never happen but prevents crash
   el.classList.add('active');
   // projectDetail maps to restore nav highlight
-  const navKey = targetPage==='projectDetail' ? 'restore' : targetPage;
-  const navEl = document.getElementById('nav-'+navKey);
+  const navKey = targetPage === 'projectDetail' ? 'restore' : targetPage;
+  const navEl = document.getElementById('nav-' + navKey);
   if(navEl) navEl.classList.add('active');
-  document.body.classList.toggle('contact-page-active', targetPage==='contact');
-  window.scrollTo(0,0);
-  if(targetPage==='home') renderHome();
-  if(targetPage==='restore') renderProjects();
-  if(targetPage==='services') renderServicesPage();
+  document.body.classList.toggle('contact-page-active', targetPage === 'contact');
+  // Reset scroll — show scroll indicator if going to home
+  window.scrollTo(0, 0);
+  const scrollIndicator = document.getElementById('scrollIndicator');
+  if(scrollIndicator) scrollIndicator.classList.remove('hide');
+  // Render page content
+  if(targetPage === 'home') renderHome();
+  if(targetPage === 'restore') renderProjects();
+  if(targetPage === 'services') renderServicesPage();
 }
 
 function goBackPage() {
