@@ -232,16 +232,12 @@ function openProject(id) {
       <p>${t.desc}</p>
     </div>
   `).join('') : '<p style="color:#5f5a52;font-size:0.84rem;line-height:1.8">No timeline updates have been added yet.</p>';
-  const galleryImgs = p.images && p.images.length >= 3
-    ? p.images.slice(0, 3)
-    : [p.img, p.img, p.img];
-  const angleLabels = ['Front View', 'Side View', 'Rear View'];
-  document.getElementById('detailImages').innerHTML = galleryImgs.map((img, idx) => `
+  const mainImg = (p.images && p.images.length > 0) ? p.images[0] : p.img;
+  document.getElementById('detailImages').innerHTML = `
     <div class="detail-img-wrap">
-      <img class="detail-img" src="${img}" alt="${p.name} – ${angleLabels[idx]}" onerror="this.style.background='#ccc'">
-      <span class="detail-img-label">${angleLabels[idx]}</span>
+      <img class="detail-img" src="${mainImg}" alt="${p.name}" onerror="this.style.background='#ccc'">
     </div>
-  `).join('');
+  `;
   showPage('projectDetail');
 }
 
@@ -646,7 +642,6 @@ function addImgRow(url=''){
   const builder=document.getElementById('imgBuilder');
   if(!builder) return;
   const rows=builder.querySelectorAll('.img-builder-row');
-  if(rows.length>=5){notify('Maximum 5 images allowed','red');return;}
   const idx=Date.now()+'_'+Math.random();
   const div=document.createElement('div');
   div.className='img-builder-row';
@@ -720,7 +715,7 @@ function populateImgBuilder(images){
   const imgs=(images&&images.length)?images:['','',''];
   imgs.forEach(url=>addImgRow(url));
   // ensure at least 3 rows
-  while(builder.querySelectorAll('.img-builder-row').length<3) addImgRow();
+  if(!builder.querySelectorAll('.img-builder-row').length) addImgRow();
 }
 
 function saveProject(){
@@ -732,15 +727,10 @@ function saveProject(){
   const rawUrls=getImgUrls();
   const normalized=rawUrls.map(u=>u.toLowerCase().trim());
   const unique=[...new Set(normalized)];
-  if(rawUrls.length<3){
-    imgErrEl.textContent='Please add at least 3 image URLs.';
+  if(rawUrls.length < 1){
+    imgErrEl.textContent='Please add at least 1 image.';
     imgErrEl.classList.add('show');
     document.getElementById('imgBuilder').scrollIntoView({behavior:'smooth',block:'center'});
-    return;
-  }
-  if(unique.length<rawUrls.length){
-    imgErrEl.textContent='Duplicate image URLs found. Each image must be unique.';
-    imgErrEl.classList.add('show');
     return;
   }
   imgErrEl.classList.remove('show');
