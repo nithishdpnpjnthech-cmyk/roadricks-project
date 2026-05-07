@@ -8,21 +8,22 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
+</head>
 
 
 <!-- ========== NAV ========== -->
 <nav id="mainNav">
   <a class="logo" onclick="showPage('home')">RodricksRestorations</a>
   <ul class="nav-links">
-    <li><a onclick="showPage('home')" class="active" id="nav-home">HOME</a></li>git push --set-upstream origin main
+    <li><a onclick="showPage('home')" class="active" id="nav-home">HOME</a></li>
     <li><a onclick="showPage('restore')" id="nav-restore">RESTORATION</a></li>
     <li><a onclick="showPage('services')" id="nav-services">SERVICES</a></li>
     <li><a onclick="showPage('about')" id="nav-about">ABOUT US</a></li>
     <li><a onclick="showPage('contact')" id="nav-contact">CONTACT</a></li>
   </ul>
   <div class="nav-actions">
-    <button type="button" class="nav-admin-btn" onclick="openAdminLogin()">Admin</button>
-    <button type="button" class="nav-toggle" onclick="toggleMobileNav()" aria-label="Toggle navigation" aria-expanded="false">
+    <button class="nav-admin-btn" onclick="openAdminLogin()">Admin</button>
+    <button class="nav-toggle" onclick="toggleMobileNav()" aria-label="Toggle navigation" aria-expanded="false">
       <span></span><span></span><span></span>
     </button>
   </div>
@@ -40,11 +41,6 @@
       <p class="hero-sub">We breathe new life into vintage automobiles, preserving automotive heritage with uncompromising craftsmanship.</p>
     </div>
     <div class="hero-dots" id="heroDots"></div>
-    <!-- Scroll Indicator -->
-    <div class="scroll-indicator" id="scrollIndicator">
-      <div class="scroll-mouse"><div class="scroll-wheel"></div></div>
-      <div class="scroll-arrows"><span></span><span></span><span></span></div>
-    </div>
   </section>
 
   <!-- Story Preview -->
@@ -59,7 +55,7 @@
         <div class="section-line"></div>
         <p>Founded in 1990 by master craftsman Rodrick Thompson, RodricksRestorations began as a small garage dedicated to preserving the golden age of automotive design.</p>
         <p>What started as a passion project has evolved into one of the most respected restoration workshops in the country, with over 500 completed restorations and numerous industry awards.</p>
-        <button type="button" class="btn-primary" style="margin-top:1.5rem" onclick="showPage('about')">Our Full Story</button>
+        <button class="btn-primary" style="margin-top:1.5rem" onclick="showPage('about')">Our Full Story</button>
       </div>
     </div>
   </section>
@@ -73,7 +69,7 @@
     </div>
     <div class="grid-4" id="servicesPreviewGrid"></div>
     <div class="text-center" style="margin-top:3rem">
-      <button type="button" class="btn-outline" onclick="showPage('services')">View All Services</button>
+      <button class="btn-outline" onclick="showPage('services')">View All Services</button>
     </div>
   </section>
 
@@ -95,14 +91,14 @@
         <h2 class="section-title">Featured Restorations</h2>
         <div class="section-line"></div>
       </div>
-      <button type="button" class="btn-outline" onclick="showPage('restore')">All Projects</button>
+      <button class="btn-outline" onclick="showPage('restore')">All Projects</button>
     </div>
     <div class="featured-grid" id="featuredGrid"></div>
   </section>
 
   <footer>
     <div class="footer-logo">RodricksRestorations</div>
-    <div class="footer-copy">© 2024 RodricksRestorations. All rights reserved.<br><span class="footer-dev">Developed by PJN Technologies</span></div>
+    <div class="footer-copy">© 2024 RodricksRestorations. All rights reserved.</div>
     <div class="footer-links">
       <a onclick="showPage('restore')">Restoration</a>
       <a onclick="showPage('services')">Services</a>
@@ -115,21 +111,21 @@
 <div class="page" id="page-restore">
   
   <div class="restore-header" style="padding-top:7rem">
-    <button type="button" class="page-back-btn" onclick="goBackPage()">← Back</button>
+    <button class="page-back-btn" onclick="goBackPage()">← Back</button>
     <span class="section-label">Our Portfolio</span>
     <h1 class="section-title">Restoration Projects</h1>
     <div class="section-line"></div>
   </div>
   <section style="padding:3rem 6%">
     <div class="projects-tabs">
-      <button type="button" class="tab-btn active" onclick="switchTab('current',this)">Current Projects</button>
-      <button type="button" class="tab-btn" onclick="switchTab('finished',this)">Finished Projects</button>
+      <button class="tab-btn active" onclick="switchTab('current',this)">Current Projects</button>
+      <button class="tab-btn" onclick="switchTab('finished',this)">Finished Projects</button>
     </div>
     <div id="projectsGrid" class="projects-grid"></div>
   </section>
   <footer>
     <div class="footer-logo">RodricksRestorations</div>
-    <div class="footer-copy">© 2024 RodricksRestorations. All rights reserved.<br><span class="footer-dev">Developed by PJN Technologies</span></div>
+    <div class="footer-copy">© 2024 RodricksRestorations. All rights reserved.</div>
     <div class="footer-links">
       <a onclick="showPage('home')">Home</a>
       <a onclick="showPage('services')">Services</a>
@@ -149,7 +145,7 @@
     </div>
   </div>
   <div class="detail-body">
-    <button type="button" class="page-back-btn" onclick="showPage('restore')">← Back to Projects</button>
+    <button class="page-back-btn" onclick="showPage('restore')">← Back to Projects</button>
     <div class="project-status-panel">
       <span class="project-status-pill" id="detailStatus">In Progress</span>
       <span class="project-last-updated" id="detailLastUpdated">Last Updated: Not available</span>
@@ -175,7 +171,7 @@
   </div>
   <footer>
     <div class="footer-logo">RodricksRestorations</div>
-    <div class="footer-copy">© 2024 RodricksRestorations. All rights reserved.<br><span class="footer-dev">Developed by PJN Technologies</span></div>
+    <div class="footer-copy">© 2024 RodricksRestorations. All rights reserved.</div>
     <div class="footer-links">
       <a onclick="showPage('home')">Home</a>
       <a onclick="showPage('restore')">Restoration</a>
@@ -188,7 +184,7 @@
 <div class="page" id="page-services">
   
   <div class="services-page-header" style="padding-top:8rem">
-    <button type="button" class="page-back-btn" onclick="goBackPage()">← Back</button>
+    <button class="page-back-btn" onclick="goBackPage()">← Back</button>
     <span class="section-label">What We Offer</span>
     <h1 class="section-title">Our Services</h1>
     <div class="section-line"></div>
@@ -213,7 +209,7 @@
   </div>
   <footer>
     <div class="footer-logo">RodricksRestorations</div>
-    <div class="footer-copy">© 2024 RodricksRestorations. All rights reserved.<br><span class="footer-dev">Developed by PJN Technologies</span></div>
+    <div class="footer-copy">© 2024 RodricksRestorations. All rights reserved.</div>
     <div class="footer-links">
       <a onclick="showPage('home')">Home</a>
       <a onclick="showPage('restore')">Restoration</a>
@@ -226,7 +222,7 @@
 <div class="page" id="page-about">
   
   <div class="about-header" style="padding-top:8rem">
-    <button type="button" class="page-back-btn" onclick="goBackPage()">← Back</button>
+    <button class="page-back-btn" onclick="goBackPage()">← Back</button>
     <span class="section-label">Who We Are</span>
     <h1 class="section-title">About RodricksRestorations</h1>
     <div class="section-line"></div>
@@ -344,7 +340,7 @@
   </section>
   <footer>
     <div class="footer-logo">RodricksRestorations</div>
-    <div class="footer-copy">© 2024 RodricksRestorations. All rights reserved.<br><span class="footer-dev">Developed by PJN Technologies</span></div>
+    <div class="footer-copy">© 2024 RodricksRestorations. All rights reserved.</div>
     <div class="footer-links">
       <a onclick="showPage('home')">Home</a>
       <a onclick="showPage('restore')">Restoration</a>
@@ -357,7 +353,7 @@
 <div class="page" id="page-contact">
   
   <div class="contact-header" style="padding-top:8rem">
-    <button type="button" class="page-back-btn" onclick="goBackPage()">← Back</button>
+    <button class="page-back-btn" onclick="goBackPage()">← Back</button>
     <span class="section-label">Get In Touch</span>
     <h1 class="section-title">Contact Us</h1>
     <div class="section-line"></div>
@@ -408,13 +404,13 @@
         <label>Message <span class="form-required">*</span></label>
         <textarea id="contactMessage" placeholder="Tell us about your vehicle and restoration goals..."></textarea>
       </div>
-      <button type="button" class="btn-primary" onclick="submitContact()">Send Message</button>
+      <button class="btn-primary" onclick="submitContact()">Send Message</button>
       <div class="submit-msg" id="submitMsg">✓ Your message has been sent. We'll be in touch soon.</div>
     </div>
   </div>
   <footer>
     <div class="footer-logo">RodricksRestorations</div>
-    <div class="footer-copy">© 2024 RodricksRestorations. All rights reserved.<br><span class="footer-dev">Developed by PJN Technologies</span></div>
+    <div class="footer-copy">© 2024 RodricksRestorations. All rights reserved.</div>
     <div class="footer-links">
       <a onclick="showPage('home')">Home</a>
       <a onclick="showPage('restore')">Restoration</a>
@@ -436,9 +432,9 @@
       <label>Password</label>
       <input type="password" id="loginPass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
     </div>
-    <button type="button" class="btn-primary" style="width:100%;margin-top:1.5rem" onclick="doLogin()">Sign In</button>
+    <button class="btn-primary" style="width:100%;margin-top:1.5rem" onclick="doLogin()">Sign In</button>
     <div class="login-error" id="loginError">Invalid username or password.</div>
-    <button type="button" onclick="closeAdminLogin()" style="width:100%;margin-top:0.8rem;background:transparent;border:none;color:var(--muted);font-size:0.75rem;cursor:pointer;font-family:'Montserrat',sans-serif;letter-spacing:0.1em">Cancel</button>
+    <button onclick="closeAdminLogin()" style="width:100%;margin-top:0.8rem;background:transparent;border:none;color:var(--muted);font-size:0.75rem;cursor:pointer;font-family:'Montserrat',sans-serif;letter-spacing:0.1em">Cancel</button>
   </div>
 </div>
 
@@ -461,8 +457,8 @@
       <div class="admin-nav-item" onclick="adminNav('metrics',this)"><span class="nav-icon">📈</span>Site Metrics</div>
     </nav>
     <div class="admin-sidebar-footer">
-      <button type="button" class="admin-close-btn" onclick="closeAdmin()" style="margin-bottom:0.4rem">✕ Exit Admin</button>
-      <button type="button" class="admin-close-btn" onclick="logoutAdmin()" style="border-color:rgba(192,57,43,0.5);color:#c0392b">⏻ Logout</button>
+      <button class="admin-close-btn" onclick="closeAdmin()" style="margin-bottom:0.4rem">✕ Exit Admin</button>
+      <button class="admin-close-btn" onclick="logoutAdmin()" style="border-color:rgba(192,57,43,0.5);color:#c0392b">⏻ Logout</button>
     </div>
   </div>
 
@@ -484,7 +480,7 @@
         <div class="admin-table-wrap">
           <div class="admin-table-header">
             <h3>Recent Projects</h3>
-            <button type="button" class="action-btn action-edit" onclick="adminNav('addProject',adminNavItem('addProject'))">+ Add New</button>
+            <button class="action-btn action-edit" onclick="adminNav('addProject',adminNavItem('addProject'))">+ Add New</button>
           </div>
           <table>
             <thead><tr><th>Project Name</th><th>Year</th><th>Status</th><th>Featured</th><th>Actions</th></tr></thead>
@@ -513,7 +509,7 @@
                 <option value="Administrator">Administrator</option>
               </select>
             </div>
-            <button type="button" class="btn-admin btn-admin-primary" onclick="addUser()">Add User</button>
+            <button class="btn-admin btn-admin-primary" onclick="addUser()">Add User</button>
           </div>
           <div class="form-error-msg" id="userFormError"></div>
         </div>
@@ -532,14 +528,14 @@
         <div class="admin-form-card">
           <h3>Hero Image Slider (10 images)</h3>
           <div class="hero-img-grid" id="heroImgGrid"></div>
-          <div class="upload-area" onclick="event.stopPropagation();document.getElementById('heroUpload').click()">
+          <div class="upload-area" onclick="document.getElementById('heroUpload').click()">
             <div style="font-size:2rem">🖼️</div>
             <p>Click to upload hero images</p>
             <p style="font-size:0.7rem;margin-top:0.3rem;color:var(--muted2)">JPG, PNG — Max 10 images</p>
+            <input type="file" id="heroUpload" multiple accept="image/*" style="display:none" onchange="handleHeroUpload(event)">
           </div>
-          <input type="file" id="heroUpload" multiple accept="image/*" style="display:none">
           <div class="form-actions">
-            <button type="button" class="btn-admin btn-admin-primary" onclick="saveHeroImages()">Save Changes</button>
+            <button class="btn-admin btn-admin-primary" onclick="saveHeroImages()">Save Changes</button>
           </div>
         </div>
       </div>
@@ -549,7 +545,7 @@
         <div class="admin-table-wrap">
           <div class="admin-table-header">
             <h3>All Projects</h3>
-            <button type="button" class="action-btn action-edit" onclick="adminNav('addProject',adminNavItem('addProject'))">+ Add New</button>
+            <button class="action-btn action-edit" onclick="adminNav('addProject',adminNavItem('addProject'))">+ Add New</button>
           </div>
           <table>
             <thead><tr><th>Car Name</th><th>Year</th><th>Status</th><th>Award</th><th>Featured</th><th>Actions</th></tr></thead>
@@ -593,7 +589,7 @@
             <textarea id="pOutcome" placeholder="Describe the final result..."></textarea>
           </div>
           <div class="admin-form-group">
-            <label>Project Images <span style="color:var(--red)">*</span> <span style="font-weight:400;font-size:0.72rem;color:var(--muted)">(add as many as you want)</span></label>
+            <label>Project Images <span style="color:var(--red)">*</span> <span style="font-weight:400;font-size:0.72rem;color:var(--muted)">(min 3 · max 5 · no duplicates)</span></label>
             <div class="img-builder" id="imgBuilder"></div>
             <div class="img-error" id="imgError">Please add at least 3 unique, non-empty image URLs.</div>
             <button type="button" class="img-builder-add" onclick="addImgRow()">+ Add Image</button>
@@ -615,12 +611,12 @@
             <label>Restoration Timeline</label>
             <div class="timeline-builder" id="timelineBuilder">
               <div id="timelineEntries"></div>
-              <button type="button" class="add-timeline-btn" onclick="addTimelineEntry()">+ Add Timeline Step</button>
+              <button class="add-timeline-btn" onclick="addTimelineEntry()">+ Add Timeline Step</button>
             </div>
           </div>
           <div class="form-actions">
-            <button type="button" class="btn-admin btn-admin-primary" onclick="saveProject()">Save Project</button>
-            <button type="button" class="btn-admin btn-admin-secondary" onclick="clearProjectForm()">Clear Form</button>
+            <button class="btn-admin btn-admin-primary" onclick="saveProject()">Save Project</button>
+            <button class="btn-admin btn-admin-secondary" onclick="clearProjectForm()">Clear Form</button>
           </div>
         </div>
       </div>
@@ -665,7 +661,7 @@
             <input type="text" id="svcImg" placeholder="https://...">
           </div>
           <div class="form-actions">
-            <button type="button" class="btn-admin btn-admin-primary" onclick="saveService()">Save Service</button>
+            <button class="btn-admin btn-admin-primary" onclick="saveService()">Save Service</button>
           </div>
         </div>
       </div>
@@ -674,7 +670,7 @@
       <div class="admin-section" id="sec-messages">
         <div style="margin-bottom:1rem;display:flex;align-items:center;justify-content:space-between">
           <h3 style="font-family:'Playfair Display',serif;font-size:1.1rem">Contact Messages</h3>
-          <button type="button" class="action-btn action-del" onclick="clearAllMessages()">Clear All</button>
+          <button class="action-btn action-del" onclick="clearAllMessages()">Clear All</button>
         </div>
         <div id="messagesList"></div>
       </div>
@@ -702,7 +698,7 @@
             </div>
           </div>
           <div class="form-actions">
-            <button type="button" class="btn-admin btn-admin-primary" onclick="saveMetrics()">Update Metrics</button>
+            <button class="btn-admin btn-admin-primary" onclick="saveMetrics()">Update Metrics</button>
           </div>
         </div>
       </div>
